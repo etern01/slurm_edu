@@ -1,38 +1,45 @@
-Role Name
-=========
+# Роль Ansible - Prometheus
 
-A brief description of the role goes here.
+Эта роль Ansible устанавливает и настраивает Prometheus, систему мониторинга и сбора метрик.
 
-Requirements
-------------
+## Требования
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Операционная система: Linux
+- Версия Ansible 2.10 или выше
 
-Role Variables
---------------
+## Параметры
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+В этой роли определены следующие параметры:
 
-Dependencies
-------------
+- `prometheus_version` (обязательный): Версия Prometheus для установки.
+- `prometheus_config_dir` (обязательный): Путь к каталогу конфигурации Prometheus.
+- `prometheus_db_dir` (обязательный): Путь к каталогу базы данных Prometheus.
+- `prometheus_install_dir` (обязательный): Путь для установки исполняемых файлов Prometheus.
+- `prometheus_binary_url` (обязательный): URL для загрузки бинарного архива Prometheus.
+- `prometheus_web_listen_address` (обязательный): IP-адрес и порт, на котором Prometheus будет прослушивать веб-интерфейс.
+- `prometheus_web_external_url`: Внешний URL-адрес для доступа к веб-интерфейсу Prometheus.
+- `prometheus_metrics_path`: Путь для доступа к метрикам Prometheus.
+- `prometheus_config_file`: Имя файла конфигурации Prometheus.
+- `prometheus_global`: Глобальные настройки Prometheus, такие как интервал сбора метрик и интервал оценки правил.
+- `prometheus_web_config`: Настройки веб-интерфейса Prometheus, такие как TLS-конфигурация и аутентификация.
+- `prometheus_storage_retention`: Время хранения данных в хранилище Prometheus.
+- `prometheus_storage_retention_size`: Размер хранилища Prometheus.
+- `prometheus_targets`: Цели для мониторинга Prometheus, такие как узлы, которые должны быть собраны метрики.
+- `prometheus_scrape_configs`: Конфигурация сбора метрик Prometheus, включая задания и статические конфигурации.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Пример использования
 
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Пример установки и настройки Prometheus
+  hosts: prometheus_servers
+  roles:
+    - prometheus
+  vars:
+    prometheus_version: 2.27.0
+    prometheus_config_dir: /etc/prometheus
+    prometheus_db_dir: /var/lib/prometheus
+    prometheus_install_dir: /usr/local/bin
+    prometheus_binary_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+    prometheus_web_listen_address: "0.0.0.0:9090"
+    prometheus_storage_retention: "30d"
+    prometheus_storage_retention_size: "30MB
