@@ -1,0 +1,18 @@
+{{ ansible_managed | comment }}
+server.host: "{{ kibana_server_host }}"
+#elasticsearch.username: "{{kibana_username}}"
+#elasticsearch.password: "{{es_pass}}"
+elasticsearch.ssl.certificateAuthorities: [ "/etc/kibana/certs/http_ca.crt" ]
+elasticsearch.hosts: ["https://localhost:9200"]
+
+logging:
+  appenders:
+    file:
+      type: file
+      fileName: /var/log/kibana/kibana.log
+      layout:
+        type: json
+  root:
+    appenders:
+      - default
+      - file

@@ -1,0 +1,9 @@
+
+global:
+  {{ prometheus_global | to_nice_yaml(indent=2,sort_keys=False) | indent(2, False) }}
+  
+rule_files:
+  - {{ prometheus_config_dir }}/rules/*.rules
+
+scrape_configs:
+  {{ prometheus_scrape_configs | to_nice_yaml(indent=2,sort_keys=False) | indent(2,False) }}

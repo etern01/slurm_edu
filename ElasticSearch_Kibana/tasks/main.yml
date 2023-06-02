@@ -1,0 +1,13 @@
+---
+# tasks file for ElasticSearch_Kibana
+- name: Install Elastic
+  ansible.builtin.include_tasks:
+    file: install_elastic_debian.yml
+    apply:
+      become: true
+
+- name: Install Kibana
+  ansible.builtin.include_tasks:
+    file: install_kibana_debian.yml
+    apply:
+      become: true

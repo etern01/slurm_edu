@@ -1,0 +1,62 @@
+---
+#
+# Installing Elasticsearch
+#
+
+# Add Elasticsearch apt key
+
+
+#- name: Adding apt-transport-https
+#  apt:
+#   name: deb apt-transport-https
+#   state: present
+
+
+- name: Add Elasticsearch apt key
+  ansible.builtin.apt_key:
+   url: "http://elasticrepo.serveradmin.ru/elastic.asc"
+   state: present
+
+# Add the Elasticsearch apt repo. For versions 6 of the stack - use '6.x-prerelease':
+
+- name: Adding Elasticsearch repo
+  ansible.builtin.apt_repository:
+   repo: deb http://elasticrepo.serveradmin.ru bullseye main
+   state: present
+
+# Installing Elasticsearch
+
+- name: Install Elasticsearch
+  ansible.builtin.apt:
+   name: elasticsearch
+   update_cache: yes
+  register: apt
+
+- name: Push password
+  vars:
+    es_api_basic_auth_password: '{{ apt.stdout | regex_search("(?<=superuser is : ).*?(?=\s|$)") }}'
+  debug: 
+    msg="Elastic password {{ es_api_basic_auth_password }} Save it"
+  
+  when: apt.stdout is defined
+
+
+  
+- name: Enable service Elasticsearch and ensure it is not masked
+  ansible.builtin.systemd:
+    name: elasticsearch
+    enabled: true
+    masked: no
+
+- name: Configure elasticsearch
+  ansible.builtin.template:
+    src: "elasticsearch.yml.j2"
+    dest: "{{ elastic_config_file }}/elasticsearch.yml"
+    force: true
+    owner: root
+    group: elasticsearch
+    mode: 0640
+  notify:
+    - restart elasticsearch.service
+
+

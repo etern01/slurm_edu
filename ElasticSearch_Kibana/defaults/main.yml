@@ -1,0 +1,15 @@
+---
+# defaults file for ElasticSearch_Kibana
+elastic_config_file: /etc/elasticsearch/
+kibana_config_file: /etc/kibana/
+kibana_home: /usr/share/kibana
+master_nodes_name: Copy-of-VM-ubuntu2204-template
+kibana_username: kibana-system
+kibana_password: 1234asd
+kibana_server_host: 0.0.0.0
+es_api_host: 127.0.0.1
+es_api_port: 9200
+es_api_basic_auth_username: elastic
+es_api_basic_auth_password: RhkL8XO+zm9aorHlnbAi  
+es_user: elastic
+es_pass: RhkL8XO+zm9aorHlnbAi

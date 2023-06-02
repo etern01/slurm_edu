@@ -1,0 +1,8 @@
+---
+# handlers file for FluentBit
+- name: Restart Fluentbit service
+  service:
+    name: fluent-bit
+    enabled: true
+    state: restarted
+  become: true

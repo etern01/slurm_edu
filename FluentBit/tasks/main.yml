@@ -1,0 +1,16 @@
+---
+# tasks file for FluentBit
+
+
+- name: Install Fluentbit
+  include_tasks: 'install-{{ ansible_os_family }}.yml'
+  
+- name: Install fluentbit package
+  package:
+    name:  fluent-bit
+    state: present
+    update_cache: true
+  notify: Restart Fluentbit service
+  
+- name: Install Fluentbit
+  include_tasks: 'configure.yml'

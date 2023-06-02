@@ -1,0 +1,25 @@
+---
+- hosts: FluentBit
+  become: true
+  gather_facts: true
+  vars:
+    es_host: "172.16.10.31"
+    fluentbit_outputs: 
+        - {"Name": "es", 
+           "Match": "*", 
+           "Host": "{{ es_host }}", 
+           "Port":"9200", 
+           "Suppress_Type_Name":"On", 
+           "tls":"on", 
+           "tls.verify":"off", 
+           "tls.ca_file":"/etc/fluent-bit/certs/http_ca.crt", 
+           "HTTP_User": "{{ es_user }}" , 
+           "HTTP_Passwd": "{{ es_pass}}" ,
+           "Logstash_Format": "On" }
+    fluentbit_inputs:
+        - {"Name":"systemd", 
+           "Tag":"systemd-docker", 
+           "Systemd_Filter":"_SYSTEMD_UNIT=docker.service" }
+  roles:
+    - FluentBit
+      

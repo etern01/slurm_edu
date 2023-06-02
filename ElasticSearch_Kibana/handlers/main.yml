@@ -1,0 +1,25 @@
+# handlers file for ElasticSearch_Kibana
+---
+- name: Restart elasticsearch.service
+  listen: "restart elasticsearch.service"
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: elasticsearch
+    state: restarted
+
+- name: Reload elasticsearch.service
+  listen: "reload elasticsearch.service"
+  become: true
+  ansible.builtin.systemd:
+    name: elasticsearch
+    state: reloaded
+
+
+- name: Restart kibana.service
+  listen: "restart kibana.service"
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: kibana.service
+    state: restarted

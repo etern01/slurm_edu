@@ -1,0 +1,110 @@
+# code: language=ansible
+---
+- name: Create prometuis group
+  ansible.builtin.group:
+    name: prometheus
+    system: true
+    state: present
+    
+- name: Create prometuis user
+  ansible.builtin.user:
+    name: prometheus
+    system: true
+    group: prometheus
+    createhome: false
+
+- name: Create prometheus data directory
+  ansible.builtin.file:
+    path: "{{ prometheus_db_dir }}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+
+- name: Create prometheus configuration directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: prometheus
+    mode: 0770
+  with_items:
+    - "{{ prometheus_config_dir }}"
+    - "{{ prometheus_config_dir }}/rules"
+    - "{{ prometheus_config_dir }}/file_sd"
+
+- name: Check if systemd_exporter is installed
+  ansible.builtin.stat:
+    path: "/etc/systemd/system/prometheus.service"
+  register: __systemd_prometheus_is_installed
+  check_mode: false
+
+- name: Get prometheus binary
+  when:
+    - __systemd_prometheus_is_installed == false
+  block:
+
+    - name: Download  binary to local folder
+      become: false
+      ansible.builtin.get_url:
+        url: "{{ prometheus_binary_url }}"
+        dest: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        mode: 0644
+      register: _download_archive
+      until: _download_archive is succeeded
+      retries: 5
+      delay: 2
+      # run_once: true # <-- this cannot be set due to multi-arch support
+      check_mode: false
+
+    - name: Unpack prometheus binaries
+      become: false
+      ansible.builtin.unarchive:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        dest: "/tmp"
+        creates: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+      check_mode: false
+
+    - name: Copy prometheus and promtool binaries
+      ansible.builtin.copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/{{ item }}"
+        dest: "{{ prometheus_install_dir }}/{{ item }}"
+        mode: 0755
+        owner: root
+        group: root
+        remote_src: yes
+      with_items:
+        - prometheus
+        - promtool
+      notify:
+        - restart prometheus
+
+    - name: Copy official console templates
+      ansible.builtin.copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/{{ item }}/"
+        dest: "{{ prometheus_config_dir }}/{{ item }}/"
+        mode: 0644
+        owner: root
+        group: root
+        remote_src: yes
+      with_items:
+        - console_libraries
+        - consoles
+      notify:
+        - restart prometheus
+
+- name: Create systemd service unit
+  ansible.builtin.template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart prometheus
+
+- name: Enable service prometheus and ensure it is not masked
+  ansible.builtin.systemd:
+    name: prometheus
+    enabled: true
+    masked: no
