@@ -1,38 +1,43 @@
-Role Name
-=========
+# Роль Ansible - ElasticSearch_Kibana
 
-A brief description of the role goes here.
+Эта роль Ansible устанавливает и настраивает ElasticSearch и Kibana, комбинированный стек для хранения и визуализации данных.
 
-Requirements
-------------
+## Требования
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Операционная система: Linux
 
-Role Variables
---------------
+## Параметры
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+В этой роли определены следующие параметры:
 
-Dependencies
-------------
+- `elastic_config_file`: Путь к конфигурационному файлу ElasticSearch.
+- `kibana_config_file`: Путь к конфигурационному файлу Kibana.
+- `kibana_home`: Директория установки Kibana.
+- `master_nodes_name`: Имя главных узлов ElasticSearch.
+- `kibana_server_host`: IP-адрес для прослушивания сервера Kibana.
+- `es_api_host`: Хост API ElasticSearch.
+- `es_api_port`: Порт API ElasticSearch.
+- `es_api_basic_auth_username`: Имя пользователя базовой аутентификации ElasticSearch API.
+- `es_api_basic_auth_password`: Пароль пользователя базовой аутентификации ElasticSearch API.
+- `es_user`: Имя пользователя Elasticsearch.
+- `es_pass`: Пароль пользователя Elasticsearch.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Пример использования
 
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Пример установки и настройки ElasticSearch и Kibana
+  hosts: elasticsearch_kibana_servers
+  roles:
+    - elasticsearch_kibana
+  vars:
+    elastic_config_file: /etc/elasticsearch/
+    kibana_config_file: /etc/kibana/
+    kibana_home: /usr/share/kibana
+    master_nodes_name: Copy-of-VM-ubuntu2204-template
+    kibana_server_host: 0.0.0.0
+    es_api_host: 127.0.0.1
+    es_api_port: 9200
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: RhkL8XO+zm9aorHlnbAi
+    es_user: elastic
+    es_pass: RhkL8XO+zm9aorHlnbAi
