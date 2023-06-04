@@ -1,38 +1,55 @@
-Role Name
-=========
+# Роль Ansible - FluentBit
 
-A brief description of the role goes here.
+Эта роль Ansible устанавливает и настраивает FluentBit, систему для сбора, обработки и пересылки журналов.
 
-Requirements
-------------
+## Требования
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Операционная система: Linux
 
-Role Variables
---------------
+## Параметры
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+В этой роли определены следующие параметры:
 
-Dependencies
-------------
+- `fluentbit_service_flush_seconds`: Интервал сброса буфера в секундах.
+- `fluentbit_service_daemon`: Запускать FluentBit в режиме демона (true/false).
+- `fluentbit_service_custom_parsers_file`: Путь к пользовательскому файлу парсеров.
+- `fluentbit_service_log_level`: Уровень журналирования FluentBit.
+- `fluentbit_service_enable_metrics`: Включить сбор метрик FluentBit (true/false).
+- `fluentbit_service_metrics_listen_ip`: IP-адрес для прослушивания метрик FluentBit.
+- `fluentbit_service_metrics_listen_port`: Порт для прослушивания метрик FluentBit.
+- `fluentbit_apt_repo`: Репозиторий APT для установки FluentBit.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- `fluentbit_inputs`: Конфигурация входных источников FluentBit.
+- `fluentbit_outputs`: Конфигурация выходных источников FluentBit.
+- `fluentbit_additional_conf_files`: Дополнительные файлы конфигурации FluentBit.
 
-Example Playbook
-----------------
+- `es_user`: Имя пользователя Elasticsearch.
+- `es_pass`: Пароль пользователя Elasticsearch.
+- `es_host`: Хост Elasticsearch.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+## Пример использования
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- name: Пример установки и настройки FluentBit
+  hosts: fluentbit_servers
+  roles:
+    - fluentbit
+  vars:
+    fluentbit_service_flush_seconds: 5
+    fluentbit_service_daemon: false
+    fluentbit_service_custom_parsers_file: []
+    fluentbit_service_log_level: info
+    fluentbit_service_enable_metrics: false
+    fluentbit_service_metrics_listen_ip: 0.0.0.0
+    fluentbit_service_metrics_listen_port: 2020
+    fluentbit_apt_repo: 'deb https://packages.fluentbit.io/debian/bullseye bullseye main'
 
-License
--------
+    fluentbit_inputs: []
 
-BSD
+    fluentbit_outputs: []
 
-Author Information
-------------------
+    fluentbit_additional_conf_files: []
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+    es_user: elastic
+    es_pass: RhkL8XO+zm9aorHlnbAi
+    es_host: "127.0.0.1"
