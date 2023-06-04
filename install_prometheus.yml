@@ -1,6 +1,0 @@
----
-- hosts: prometheus
-  become: true
-  gather_facts: false
-  roles:
-    - Prometheus

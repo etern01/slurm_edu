@@ -1,6 +1,0 @@
----
-- hosts: elastic
-  become: true
-  gather_facts: true
-  roles:
-    - ElasticSearch_Kibana

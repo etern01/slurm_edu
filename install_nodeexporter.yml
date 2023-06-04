@@ -1,6 +1,0 @@
----
-- hosts: node_exporter
-  become: true
-  gather_facts: true
-  roles:
-    - Node_Exporter
