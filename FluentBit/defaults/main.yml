@@ -18,6 +18,6 @@ fluentbit_outputs: []
 
 fluentbit_additional_conf_files: []
 
-es_user: elastic
-es_pass: RhkL8XO+zm9aorHlnbAi
-es_host: "127.0.0.1"
+es_user: ""
+es_pass: ""
+es_host: ""
