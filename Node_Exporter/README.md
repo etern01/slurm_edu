@@ -1,38 +1,45 @@
-Role Name
-=========
+# Роль Ansible - Node_Exporter
 
-A brief description of the role goes here.
+Эта роль Ansible устанавливает и настраивает Node_Exporter, инструмент для сбора и экспорта метрик с узлов системы.
 
-Requirements
-------------
+## Требования
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Операционная система: Linux
 
-Role Variables
---------------
+## Параметры
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+В этой роли определены следующие параметры:
 
-Dependencies
-------------
+- `node_exporter_version`: Версия Node_Exporter.
+- `node_exporter_install_dir`: Директория установки Node_Exporter.
+- `node_exporter_binary_url`: URL для загрузки бинарного файла Node_Exporter.
+- `node_exporter_checksums_url`: URL для загрузки файла контрольных сумм Node_Exporter.
+- `node_exporter_skip_install`: Флаг, указывающий пропустить установку Node_Exporter (по умолчанию `false`).
+- `node_exporter_web_listen_address`: IP-адрес и порт для прослушивания веб-сервера Node_Exporter.
+- `node_exporter_web_telemetry_path`: Путь для доступа к метрикам Node_Exporter.
+- `node_exporter_textfile_dir`: Директория для текстовых файлов экспорта метрик Node_Exporter.
+- `node_exporter_tls_server_config`: Конфигурация TLS-сервера Node_Exporter.
+- `node_exporter_http_server_config`: Конфигурация HTTP-сервера Node_Exporter.
+- `node_exporter_basic_auth_users`: Пользователи для базовой аутентификации Node_Exporter.
+- `node_exporter_enabled_collectors`: Включенные коллекторы метрик Node_Exporter.
+- `node_exporter_disabled_collectors`: Отключенные коллекторы метрик Node_Exporter.
+- `node_exporter_binary_install_dir`: Директория установки бинарного файла Node_Exporter.
+- `node_exporter_system_group`: Группа системного пользователя Node_Exporter.
+- `node_exporter_system_user`: Имя системного пользователя Node_Exporter.
+- `prometheus_hosts`: Хосты, на которых установлен Prometheus.
+- `prometheus_config_dir`: Директория конфигурации Prometheus.
+- `prometheus_targets`: Цели сбора метрик Prometheus.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Пример использования
 
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Пример установки и настройки Node_Exporter
+  hosts: node_exporter_servers
+  roles:
+    - node_exporter
+  vars:
+    node_exporter_version: 1.1.2
+    node_exporter_install_dir: /usr/local/bin
+    node_exporter_binary_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    node_exporter_checksums_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/sha256sums.txt"
+    node_exporter_web_listen_address: "0.0.0.0
